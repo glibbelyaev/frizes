@@ -3,12 +3,26 @@ from manim import *
 
 class OrnamentDemo(Scene):
     def construct(self):
+        h = 4.0
+        l = 30.0
+
+        #line1 = Line([-L,H,0], [L,H,0]))
+        #line2 =Line([-L,-H,0], [L,-H,0])
+        line1 = Line(-l * RIGHT, l * RIGHT)
+        self.play(line1.animate.shift(UP * 3))
+        line2 = Line(-l * RIGHT, l * RIGHT)
+        self.play(line2.animate.shift(DOWN * 3))
+        dline = DashedLine([-l,0,0], [l,0,0])
+        self.add(line1, line2, dline)
+        self.wait(1)
+
+        tape = VGroup(line1, line2, dline)
         # 1. Створення фундаментальної області (мотиву)
 
         position_list = [
-            [0, 0, 0],  #
-            [0, 2, 0],  #
-            [1, 0, 0]]
+            [0, -2.5, 0],  #
+            [0, -0.5, 0],  #
+            [1, -2.5, 0]]
 
         # Використовуємо трикутник як базовий елемент орнаменту
         motif = Polygon(*position_list, color=PURPLE_B).set_fill(BLUE, opacity=0.8)
@@ -30,6 +44,8 @@ class OrnamentDemo(Scene):
         self.play(copy_v.animate.shift(RIGHT * 2))
         self.wait(1)
 
+
+
         # 4. Формування простого фризу (лінійного орнаменту)
         # Повторюємо ці дії для створення ряду
         ornament = VGroup(motif, copy_t, copy_v)
@@ -37,7 +53,9 @@ class OrnamentDemo(Scene):
         for i in range(-2, 3):
             full_row.add(ornament.copy().shift(RIGHT * i * 6))
 
+        full_row.add(tape.copy())
+        self.play(FadeOut(tape))
         self.play(FadeOut(motif, copy_t, copy_v))
         self.play(Create(full_row))
-        self.play(full_row.animate.scale(0.4))
+        self.play(full_row.animate.scale(0.6))
         self.wait(2)
